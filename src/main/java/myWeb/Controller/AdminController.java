@@ -53,8 +53,8 @@ public class AdminController {
 
     @PostMapping("/admin/newUser")
     public String create(@ModelAttribute("user") User user,
-                         @RequestParam(required = false) String adminAuth){
-        return userManipulation(user, adminAuth);
+                         @RequestParam(required = false) String[] auth){
+        return userManipulation(user, auth);
     }
 
     @GetMapping(value = "/admin/editUser/{id}")
@@ -70,15 +70,19 @@ public class AdminController {
 
     @PostMapping("/admin/editUser")
     public String edit(@ModelAttribute("user") User user,
-                       @RequestParam(required = false) String adminAuth){
-        return userManipulation(user, adminAuth);
+                       @RequestParam(required = false) String[] auth){
+        return userManipulation(user, auth);
     }
 
-    private String userManipulation(User user, String adminAuth) {
+    private String userManipulation(User user, String[] auth) {
         Set<Role> roleSet = new HashSet<>();
-        roleSet.add(roleService.getAuthByName("User"));
-        if (adminAuth != null && adminAuth.equals("Admin"))
+        if (auth.length == 2){
+            roleSet.add(roleService.getAuthByName("User"));
             roleSet.add(roleService.getAuthByName("Admin"));
+        } else {
+            if (auth[0].equals("Admin")) roleSet.add(roleService.getAuthByName("Admin"));
+            else roleSet.add(roleService.getAuthByName("User"));
+        }
 
         user.setRoleSet(roleSet);
         userService.saveUser(user);

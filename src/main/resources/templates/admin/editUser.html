@@ -29,10 +29,13 @@
             <p>PASSWORD</p>
             <input type="text" th:field="*{password}" id="password">
         </label>
-        <label for="adminId"><p>Give User admin?</p>
-            <input type="checkbox" id="adminId" name="adminAuth" th:value="Admin">
-        </label>
-        <br/>
+        <br>
+        <label for="role">Role</label>
+        <select style="height: 50px; width: 100%" class="custom-select" name="auth" multiple id="role" required>
+            <option th:selected="User" id="user">User</option>
+            <option th:selected="Admin" id="admin">Admin</option>
+        </select>
+        <br>
         <input type="submit"/>
     </form>
     <a th:href="@{/admin/userList}">Go back user list.</a>
